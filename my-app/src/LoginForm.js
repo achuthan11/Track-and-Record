@@ -17,10 +17,7 @@ function Login (){
             console.log(response);
             }
         })
-      
     };
-
-
     return (
     <form className='App'>
         <div>
