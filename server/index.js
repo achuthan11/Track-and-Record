@@ -25,9 +25,11 @@ app.post('/login', (req,res) => {
             }
             if(result) {
                 res.send(result);
+                console.log(result[1]);
             }
             else{
                 res.send({message: "Invalid credentials"});
+                console.log("Error message", result);
             }
         }
     )
