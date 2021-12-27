@@ -1,0 +1,73 @@
+Store -> global content storage
+
+Action -> Define the action we need to perform 
+
+Reducers -> It changes the store based on the actions we performed
+
+Dispatch -> Sends the actions to the Reducers and Reducers performs actions
+
+//Implementation
+
+import {createStore} from 'redux';
+
+//Action
+const increment = () => {
+    return {
+        type: "INCREMENT";
+    }
+};
+const decrement = () => {
+    return {
+        type: "DECREMENT";
+    }
+
+};
+
+//Reducers
+const counter = (state=0, action) => {   //state is the inital object
+    switch(action.type) {
+        case "INCREMENT":
+            return state+1;
+        case "DECREMENT":
+            return state-1;
+        default :
+            return state;
+    }
+};
+
+//Store
+let store = createStore(
+    counter, 
+    window.__REDUX_DEVTOOLS_EXTENSTION__ && window.__REDUX_DEVTOOLS_EXTENSTION__()
+    );
+
+//Dispatch
+store.dispatch(increment())
+
+
+//To log the store object in the console
+store.subscribe(() => console.log(store.getState()));
+
+//To connect the store with the react//
+import { Provider } from "react-redux";
+
+//in rendoring statement
+ReactDOM.render(
+    <Provider store={the stores we need to hook into react}>
+        <App />
+    </Provider>,
+  document.getElementById('root')
+);
+
+
+{/* {empDetails.map((val) => {
+              return (
+                <div>
+                  <div>
+                    <h3>{val.emp_name}</h3>
+                    <h3>{val.email}</h3>
+                    <h3>{val.password}</h3>
+                  </div>
+                </div>
+              );
+            })}; */}

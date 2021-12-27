@@ -1,10 +1,12 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(express.json()); // to parse the incoming data from json
 app.use(cors()); // to use cross platform data, i.e from front end to backend
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
   user: "root",
@@ -16,29 +18,36 @@ const db = mysql.createConnection({
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  db.query(
-    "select email, password from employee where email=? and password =?",
-    [email, password],
-    (err, result) => {
-      if (err) {
-        console.log({ err: err });
-      }
-      if (result) {
-        res.send(result);
-        console.log(result[1]);
-      } else {
-        res.send({ message: "Invalid credentials" });
-        console.log("Error message", result);
-      }
-    }
-  );
+  const query = "select * from employee where email = ? and password = ?";
+  db.query(query, [email, password], (err, result) => {
+    if (err) {
+      res.status(200).send("Errored");
+      console.log(err);
+    } else if (result) res.status(200).send(result[0].emp_name);
+    else res.status(404).send("No clue");
+  });
 });
 
-app.get("/", (req, res) => {
+app.get("/initiatives", (req, res) => {
+  const query =
+    "select init_name,description,init_status,created_by from initiatives;";
+  db.query(query, (err, result) => {
+    if (err) return res.status(404).send(err);
+    else {
+      console.log("Initiatives fetched!");
+      res.send(result);
+    }
+  });
+});
+
+app.get("/employees", (req, res) => {
   const query = "select * from employee";
   db.query(query, (err, result) => {
     if (err) return res.status(404).send(err);
-    else res.send(result);
+    else {
+      console.log("Success!!");
+      res.send(result);
+    }
   });
 });
 
