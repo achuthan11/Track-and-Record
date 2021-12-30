@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Axios from "axios";
 import "./App.css";
-import { useSelector, useDispatch } from "react-redux";
-import userInfo, { userUpdate } from "./actions/userChange";
+import { useDispatch } from "react-redux";
+import userInfo from "./actions/userChange";
 
 function Login() {
-  const userDetails = useSelector((state) => state.userInfo);
-  const userName = userDetails.name;
-  const userMail = userDetails.email;
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginState, setLoginState] = useState("False");
-  const [name, setName] = useState("");
 
+  const dispatcher = (name, email, loginState) => {
+    dispatch(userInfo(name, email, loginState));
+  };
   const login = () => {
     Axios.post("http://localhost:3001/login", {
       email: email,
       password: password,
     }).then((response) => {
-      if (response) {
-        setName(response);
-        setLoginState("True");
-        dispatch(userInfo(name, email, true));
+      if (response.data === "No matching credentials") {
+        console.log("Invalid credentials from login");
+        dispatcher("Invalid credentials from login", email, false);
+      } else if (response) {
+        console.log(response.data[0].emp_name);
+        dispatcher(response.data[0].emp_name, email, true);
       }
     });
   };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+  };
+
   return (
-    <form className="App">
+    <form className="App" onSubmit={(event) => submitHandler(event)}>
       <div>
         <label>Email: </label>
         <input
@@ -47,9 +51,6 @@ function Login() {
         />
         <button onClick={login}>Submit</button>
       </div>
-      <h2>{loginState}</h2>
-      <h1>User MailId: {userMail} from redux</h1>
-      <h1>user name: {name} from react</h1>
     </form>
   );
 }

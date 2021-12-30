@@ -18,13 +18,19 @@ const db = mysql.createConnection({
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const query = "select * from employee where email = ? and password = ?";
+  const query =
+    "select emp_name from employee where email = ? and password = ?";
+
   db.query(query, [email, password], (err, result) => {
-    if (err) {
-      res.status(200).send("Errored");
-      console.log(err);
-    } else if (result) res.status(200).send(result[0].emp_name);
-    else res.status(404).send("No clue");
+    // console.log(err, result[0].emp_name);
+    if (err) res.send(err);
+    else if (result.length == 0) {
+      res.send("No matching credentials");
+      console.log(result, "invalid");
+    } else {
+      res.send(result);
+      console.log(result);
+    }
   });
 });
 
@@ -51,6 +57,7 @@ app.get("/employees", (req, res) => {
   });
 });
 
+const port = process.env.PORT || 3001;
 app.listen(3001, () => {
-  console.log("Running on 3001");
+  console.log(`Running on ${port}`);
 });

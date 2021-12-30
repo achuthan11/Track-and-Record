@@ -1,12 +1,9 @@
 const userInfo = (userName, userEmail, loggedIn) => {
-  const userData = {
+  return {
+    type: "UPDATE",
     name: userName,
     email: userEmail,
     loggedIn: loggedIn,
-  };
-  return {
-    type: "UPDATE",
-    userData,
   };
 };
 

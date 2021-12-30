@@ -7,12 +7,12 @@ const initial_info = {
 const userUpdate = (info = initial_info, action) => {
   switch (action.type) {
     case "UPDATE":
-      info = {
+      return {
+        ...info,
         name: action.name,
         email: action.email,
         loggedIn: action.loggedIn,
       };
-      return info;
     default:
       return info;
   }
