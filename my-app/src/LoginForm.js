@@ -3,16 +3,19 @@ import Axios from "axios";
 import "./App.css";
 import { useDispatch } from "react-redux";
 import userInfo from "./actions/userChange";
+import { useHistory } from "react-router-dom";
 
 function Login() {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatcher = (name, email, loginState) => {
     dispatch(userInfo(name, email, loginState));
+    if (loginState) history.push("/");
   };
+
   const login = () => {
     Axios.post("http://localhost:3001/login", {
       email: email,

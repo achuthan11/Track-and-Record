@@ -4,11 +4,13 @@ import { Redirect } from "react-router-dom";
 
 function Home({ authorized }) {
   const [initiatives, setInitiatives] = useState([]);
+
   useEffect(() => {
     Axios.get("http://localhost:3001/initiatives").then((response) => {
-      setInitiatives(...initiatives, response.data);
+      setInitiatives(response.data);
     });
   }, []);
+
   if (authorized) {
     return (
       <div>
