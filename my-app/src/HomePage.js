@@ -18,6 +18,7 @@ function Home({ authorized }) {
           return (
             <h3>
               Initative name: {val.init_name} | Description: {val.description}
+              <button>Subscribe</button>
             </h3>
           );
         })}
